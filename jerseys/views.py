@@ -1,7 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.contrib import messages
 from django.db import transaction  
 from urllib3 import request  
 from jerseys.models import Jersey
@@ -18,7 +17,6 @@ def jersey_detail(request, slug):
 def add_to_cart(request, slug):
     jersey = get_object_or_404(Jersey, slug=slug)
     if jersey.stock <= 0:
-        messages.error(request, 'This jersey is out of stock!')
         return redirect('jersey_detail', slug=slug)
     
     cart = request.session.get('cart', [])
@@ -41,7 +39,6 @@ def add_to_cart(request, slug):
             if added_qty > 0:
                 existing_item['quantity'] = jersey.stock 
             else:
-                messages.warning(request, 'Cannot add more—stock limit reached!')
                 return redirect('jersey_detail', slug=slug)
     else:
         if quantity <= jersey.stock:
@@ -93,10 +90,6 @@ def remove_from_cart(request, item_id):
         quantity_removed = item_to_remove.get('quantity', 1)  
         jersey.stock += quantity_removed
         jersey.save()
-        
-        messages.info(request, f'Removed {quantity_removed} x {item_to_remove["name"]} from cart. Stock updated.')
-    else:
-        messages.warning(request, 'Item not found in cart.')
     
     cart = [item for item in cart if item['id'] != int(item_id)]
     request.session['cart'] = cart
@@ -107,7 +100,6 @@ def remove_from_cart(request, item_id):
 def clear_cart(request):
     request.session['cart'] = []
     request.session.modified = True
-    messages.info(request, 'Cart cleared!')
     return redirect('cart')
 
 @login_required
@@ -115,7 +107,6 @@ def clear_cart(request):
 def checkout(request):
     cart = request.session.get('cart', [])
     if not cart:
-        messages.warning(request, 'Your cart is empty!')
         return redirect('cart')
     
     total = sum(item['price'] * item.get('quantity', 1) for item in cart)
@@ -129,11 +120,9 @@ def checkout(request):
             jersey.save()
             deducted_qty_total += qty
         else:
-            messages.error(request, f'Not enough stock for {item["name"]}!')
             return redirect('cart')
     
     request.session['cart'] = []
     request.session.modified = True
     
-    messages.success(request, f'Order placed successfully! Total: ${total:.2f} (deducted {deducted_qty_total} items from stock).')
     return render(request, 'jerseys/checkout.html', {'total': total})
