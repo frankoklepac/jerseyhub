@@ -9,7 +9,14 @@ class TeamAdmin(admin.ModelAdmin):
 
 @admin.register(Jersey)
 class JerseyAdmin(admin.ModelAdmin):
-    list_display = ('team', 'type', 'size', 'brand', 'price', 'is_retro', 'stock')
-    list_filter = ('team', 'brand', 'type', 'is_retro', 'size')
-    search_fields = ('team', 'brand', 'type')
-    prepopulated_fields = {'slug': ('team', 'size', 'type')}
+    list_display = ['team', 'size', 'brand', 'type', 'price', 'is_retro', 'stock', 'slug', 'created_at']
+    list_filter = ['size', 'brand', 'type', 'is_retro', 'team', 'created_at']
+    search_fields = ['team__name', 'description', 'slug']
+    prepopulated_fields = {'slug': ('team', 'type', 'size')}  
+    readonly_fields = ['created_at', 'updated_at']
+    fieldsets = (
+        ('Basic Info', {'fields': ('team', 'size', 'brand', 'type', 'slug')}),
+        ('Pricing & Stock', {'fields': ('price', 'stock', 'is_retro')}),
+        ('Media & Description', {'fields': ('image', 'description')}),
+        ('Timestamps', {'fields': ('created_at', 'updated_at'), 'classes': ('collapse',)}),
+    )
