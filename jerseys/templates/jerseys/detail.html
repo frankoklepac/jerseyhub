@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head><title>{{ jersey }}</title></head>
+<body>
+    <h1>{{ jersey }}</h1>
+    {% if jersey.image %}<img src="{{ jersey.image.url }}" alt="{{ jersey }}" style="width: 300px;">{% endif %}
+    <p>Price: ${{ jersey.price }}</p>
+    <p>Description: {{ jersey.description|default:"No description." }}</p>
+    <p>Stock: {{ jersey.stock_quantity }}</p>
+    {% if user.is_authenticated and jersey.stock_quantity > 0 %}
+        <a href="{% url 'add_to_cart' jersey.slug %}"><button>Add to Cart</button></a>
+    {% else %}
+        <p><a href="{% url 'login' %}">Login to purchase</a></p>
+    {% endif %}
+    <a href="{% url 'jersey_list' %}">Back to List</a>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head><title>Jersey Listings</title></head>
+<body>
+    <h1>Homepage</h1>
+    <a href="{% url 'home' %}"><button>Home</button></a>
+    <h1>Available Jerseys</h1>
+    <div style="display: flex; flex-wrap: wrap;">
+        {% for jersey in jerseys %}
+        <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; width: 200px;">
+            {% if jersey.image %}<img src="{{ jersey.image.url }}" alt="{{ jersey }}" style="width: 100%;">{% endif %}
+            <h3><a href="{{ jersey.get_absolute_url }}">{{ jersey }}</a></h3>
+            <p>Price: ${{ jersey.price }}</p>
+            <p>Stock: {{ jersey.stock }}</p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'add_to_cart' jersey.slug %}"><button>Add to Cart</button></a>
+            {% else %}
+                <p><a href="{% url 'login' %}">Login to purchase</a></p>
+            {% endif %}
+        </div>
+        {% empty %}
+        <p>No jerseys available.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
