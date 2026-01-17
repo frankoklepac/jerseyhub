@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JerseyHub Home</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        button { padding: 10px 20px; margin: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .message { margin: 20px; font-size: 18px; }
+    </style>
+</head>
+<body>
+    {% if user.is_authenticated %}
+        <h1>Welcome back, {{ user.username }}!</h1>
+        <p class="message">You're logged in. Here's your dashboard/content.</p>
+        <!-- Add logged-in features here, e.g., user profile link -->
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+    {% else %}
+        <h1>Welcome to JerseyHub!</h1>
+        <p class="message">Please log in or register to continue.</p>
+        <a href="{% url 'register' %}"><button>Register</button></a>
+        <a href="{% url 'login' %}"><button>Login</button></a>
+    {% endif %}
+</body>
+</html>
