@@ -1,10 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.utils.text import slugify  
 
 class Team(models.Model):
     name = models.CharField(max_length=100)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+            if not self.slug:
+                self.slug = slugify(self.name)
+            super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -45,14 +51,21 @@ class Jersey(models.Model):
     stock = models.PositiveIntegerField(default=0)
     description = models.TextField(blank=True)
     slug = models.SlugField(unique=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)  
+
+    class Meta:
+        unique_together = ['team', 'size', 'type', 'brand'] 
+        ordering = ['-created_at']  
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = f"{self.team.slug}-{self.size}-{self.type}".lower().replace(' ', '-')
-        super().save(*args, **kwargs)
+            if not self.slug:
+                team_slug = self.team.slug or slugify(self.team.name)
+                self.slug = slugify(f"{team_slug}-{self.size}-{self.type}")
+            super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.team.name} {self.get_type_display()} {self.get_size_display()}"
-    
+
     def get_absolute_url(self):
-        return reverse('jersey_detail', args=[self.slug])
+        return reverse('jersey_detail', kwargs={'slug': self.slug})  
