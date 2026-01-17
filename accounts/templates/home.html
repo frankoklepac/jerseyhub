@@ -14,7 +14,6 @@
     {% if user.is_authenticated %}
         <h1>Welcome back, {{ user.username }}!</h1>
         <p class="message">You're logged in. Here's your dashboard/content.</p>
-        <!-- Add logged-in features here, e.g., user profile link -->
         <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}
             <button type="submit">Logout</button>
@@ -25,5 +24,13 @@
         <a href="{% url 'register' %}"><button>Register</button></a>
         <a href="{% url 'login' %}"><button>Login</button></a>
     {% endif %}
+
+    {% if user.is_superuser %}
+        <h2>Admin Panel</h2>
+        <p class="message">You have administrative privileges.</p>
+        <a href="{% url 'admin:index' %}"><button>Go to Admin Dashboard</button></a>
+    {% endif %}
+
+    <a href="{% url 'jersey_list' %}"><button>Browse Jerseys</button></a>
 </body>
 </html>
