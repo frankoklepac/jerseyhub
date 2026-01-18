@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head><title>Jersey Listings</title></head>
+<body>
+    <h1>Marketplace</h1>
+    <h1>{{ post.title }}</h1>
+    <p>Description: {{ post.description }}</p>
+    <p>Price: ${{ post.price }}</p>
+    {% if post.image %}
+                <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width:100px;"/>
+    {% else %}
+        <p>No Image Available</p>
+    {% endif %}
+    <p>Posted by: {{ post.owner.username }}</p>
+    {% if post.is_sold %}
+        <p>This jersey has been sold.</p>
+    {% else %}
+        {% if post.owner == request.user %}
+            <a href="{% url 'edit_post' post_id=post.id %}">Edit Post</a>
+        {% else %}
+            <a href="{% url 'buy_jersey' post_id=post.id %}">Buy jersey</a>
+            {{ error }}
+        {% endif %}
+    {% endif %}
+    <a href="{% url 'marketplace_home' %}">Back to Home</a>
+    
+</body>
+</html>

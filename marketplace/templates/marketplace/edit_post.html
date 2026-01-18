@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><title>Jersey Listings</title></head>
+<body>
+    <h1>Marketplace</h1>
+    <h1>Edit Post</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save Changes</button>
+    </form>
+    <p><a href="{% url 'marketplace_home' %}">Back to Marketplace</a></p>
+</body>
+</html>

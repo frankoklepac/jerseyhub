@@ -26,6 +26,7 @@ urlpatterns = [
     path('auth/', include('accounts.urls')),
     path('', views.home, name='home'),
     path('jerseys/', include('jerseys.urls')),
+    path('marketplace/', include('marketplace.urls')),
 ]
 
 if settings.DEBUG:
