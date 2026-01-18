@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head><title>Jersey Listings</title></head>
+<body>
+    <h1>Marketplace</h1>
+    <h1>User posts</h1>
+    <div style="display: flex; flex-wrap: wrap;">
+        {% for post in posts %}
+        <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; width: 200px;">
+            <h2>{{ post.title }}</h2>
+            <p>Price: ${{ post.price }}</p>
+            <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width:100px;"/>
+            <a href="{% url 'post_detail' post_id=post.id %}">View Details</a>
+        </div>
+        {% empty %}
+        <p>No jerseys available.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
