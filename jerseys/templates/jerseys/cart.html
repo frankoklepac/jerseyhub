@@ -1,19 +1,20 @@
-<!DOCTYPE html>
-<html>
-<head><title>Your Cart</title></head>
-<body>
-    <a href="{% url 'jersey_list' %}"><button>Browse Jerseys</button></a>
+{% extends 'base.html' %}
+{% load cart_extras %}
 
+{% block title %}Your Cart{% endblock %}
+
+{% block content %}
     <h1>Shopping Cart</h1>
-    {% load cart_extras %}
+
     {% if cart %}
-        <table border="1" style="width: 100%; border-collapse: collapse;">
+        <div style="overflow-x: auto;">
+        <table>
             <thead>
                 <tr>
-                    <th>Image</th>
+                    <th style="width: 100px;">Image</th>
                     <th>Item</th>
                     <th>Price</th>
-                    <th>Quantity</th>
+                    <th style="width: 100px;">Quantity</th>
                     <th>Total</th>
                     <th>Actions</th>
                 </tr>
@@ -21,30 +22,42 @@
             <tbody>
               {% for item in cart %}
               <tr>
-                  {% if item.image %}
-                      <td><img src="{{ item.image }}" alt="{{ item.name }}" style="width: 50px;"></td>
-                  {% else %}
-                      <td>-</td>
-                  {% endif %}
-                  <td>{{ item.name }}</td>
-                  <td>${{ item.price }}</td>
-                  <td>{{ item.quantity }}</td>  
-                  <td>${{ item.price|multiply:item.quantity }}</td> 
                   <td>
-                      <form method="post" action="{% url 'remove_from_cart' item.id %}" style="display: inline;">
-                          {% csrf_token %}
-                          <button type="submit">Remove</button>
-                      </form>
+                      {% if item.image %}
+                          <img src="{{ item.image }}" alt="{{ item.name }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px;">
+                      {% else %}
+                          <div style="width: 80px; height: 80px; background: #eee; display: flex; align-items: center; justify-content: center;">-</div>
+                      {% endif %}
+                  </td>
+                  <td>
+                      <strong>{{ item.name }}</strong>
+                  </td>
+                  <td>${{ item.price }}</td>
+                  <td>{{ item.quantity }}</td>
+                  <td>${{ item.quantity|multiply:item.price }}</td>
+                  <td>
+                      <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-danger" style="padding: 5px 10px; font-size: 14px;">Remove</a>
                   </td>
               </tr>
               {% endfor %}
-          </tbody>
+            </tbody>
         </table>
-        <h2>Total: ${{ total|floatformat:2 }}</h2>
-        <a href="{% url 'clear_cart' %}"><button>Clear Cart</button></a>
-        <a href="{% url 'checkout' %}"><button>Proceed to Checkout</button></a>    
-      {% else %}
-        <p>Your cart is empty. <a href="{% url 'jersey_list' %}">Browse Jerseys</a></p>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px;">
+            <div>
+                 <a href="{% url 'clear_cart' %}" class="btn btn-danger">Clear Cart</a>
+                 <a href="{% url 'jersey_list' %}" class="btn" style="background-color: #6c757d;">Continue Shopping</a>
+            </div>
+            <div style="text-align: right;">
+                <h2>Total: ${{ total_price|floatformat:2 }}</h2>
+                <a href="{% url 'checkout' %}" class="btn btn-success" style="font-size: 1.2em; padding: 15px 30px;">Proceed to Checkout</a>
+            </div>
+        </div>
+    {% else %}
+        <div style="text-align: center; padding: 50px;">
+            <p>Your cart is empty.</p>
+            <a href="{% url 'jersey_list' %}" class="btn">Browse Jerseys</a>
+        </div>
     {% endif %}
-</body>
-</html>
+{% endblock %}

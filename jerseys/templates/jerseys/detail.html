@@ -1,24 +1,43 @@
-<!DOCTYPE html>
-<html>
-<head><title>{{ jersey }}</title></head>
-<body>
-    <p>Hello {{ user.username }}!</p>
-    <h1>{{ jersey }}</h1>
-    {% if jersey.image %}<img src="{{ jersey.image.url }}" alt="{{ jersey }}" style="width: 300px;">{% endif %}
-    <p>Price: ${{ jersey.price }}</p>
-    <p>Description: {{ jersey.description|default:"No description." }}</p>
-    <p>Stock: {{ jersey.stock }}</p>
-        {% if user.is_authenticated and jersey.stock > 0 %}
-            <form method="post" action="{% url 'add_to_cart' jersey.slug %}">
-                {% csrf_token %}
-                <label for="quantity">Quantity (max {{ jersey.stock }}):</label>
-                <input type="number" id="quantity" name="quantity" min="1" max="{{ jersey.stock }}" value="1" required>
-                <button type="submit">Add to Cart</button>
-            </form>
-            <a href="{% url 'cart' %}">View Cart</a>
-        {% else %}
-            <p><a href="{% url 'login' %}">Login to add to cart</a></p>
-        {% endif %}
-    <a href="{% url 'jersey_list' %}">Back to List</a>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}{{ jersey }}{% endblock %}
+
+{% block content %}
+    <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 300px;">
+            {% if jersey.image %}
+                <img src="{{ jersey.image.url }}" alt="{{ jersey }}" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            {% else %}
+                <div style="width: 100%; height: 400px; background: #eee; border-radius: 8px; display: flex; align-items: center; justify-content: center;">No Image</div>
+            {% endif %}
+        </div>
+        <div style="flex: 1; min-width: 300px;">
+            <h1 style="margin-top: 0;">{{ jersey }}</h1>
+            <p style="font-size: 1.5em; color: #27ae60; font-weight: bold;">${{ jersey.price }}</p>
+            <p><strong>Stock:</strong> {{ jersey.stock }} available</p>
+            <div style="margin: 20px 0; padding: 20px; background: #f9f9f9; border-radius: 8px;">
+                <h3>Description</h3>
+                <p>{{ jersey.description|default:"No description provided."|linebreaks }}</p>
+            </div>
+            
+            {% if user.is_authenticated %}
+                {% if jersey.stock > 0 %}
+                <form method="post" action="{% url 'add_to_cart' jersey.slug %}" style="margin-top: 20px;">
+                    {% csrf_token %}
+                    <label for="quantity">Quantity:</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="number" id="quantity" name="quantity" min="1" max="{{ jersey.stock }}" value="1" required style="width: 100px; margin-bottom: 0;">
+                        <button type="submit" class="btn">Add to Cart</button>
+                    </div>
+                </form>
+                {% else %}
+                    <p class="alert error">Out of stock</p>
+                {% endif %}
+            {% else %}
+                <p class="alert info"><a href="{% url 'login' %}?next={{ request.path }}">Login</a> to purchase this item.</p>
+            {% endif %}
+            
+            <p style="margin-top: 20px;"><a href="{% url 'jersey_list' %}">&larr; Back to List</a></p>
+        </div>
+    </div>
+{% endblock %}

@@ -1,37 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>JerseyHub Home</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-        button { padding: 10px 20px; margin: 10px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
-        button:hover { background: #0056b3; }
-        .message { margin: 20px; font-size: 18px; }
-    </style>
-</head>
-<body>
-    {% if user.is_authenticated %}
-        <h1>Welcome back, {{ user.username }}!</h1>
-        <p class="message">You're logged in. Here's your dashboard/content.</p>
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit">Logout</button>
-        </form>
-    {% else %}
-        <h1>Welcome to JerseyHub!</h1>
-        <p class="message">Please log in or register to continue.</p>
-        <a href="{% url 'register' %}"><button>Register</button></a>
-        <a href="{% url 'login' %}"><button>Login</button></a>
-    {% endif %}
+{% extends 'base.html' %}
 
-    {% if user.is_superuser %}
-        <h2>Admin Panel</h2>
-        <p class="message">You have administrative privileges.</p>
-        <a href="{% url 'admin:index' %}"><button>Go to Admin Dashboard</button></a>
-    {% endif %}
+{% block title %}JerseyHub Home{% endblock %}
 
-    <a href="{% url 'jersey_list' %}"><button>Browse Jerseys</button></a>
-    <a href="{% url 'marketplace_home' %}"><button>Visit Marketplace</button></a>
-</body>
-</html>
+{% block content %}
+    <div style="text-align: center; padding: 50px 0;">
+        {% if user.is_authenticated %}
+            <h1>Welcome back, {{ user.username }}!</h1>
+            <p class="message">You're logged in. Manage your account or shop now.</p>
+            
+            <div style="margin-top: 30px;">
+                <a href="{% url 'jersey_list' %}" class="btn">Browse Shop</a>
+                <a href="{% url 'marketplace_home' %}" class="btn">Go to Marketplace</a>
+            </div>
+        {% else %}
+            <h1>Welcome to JerseyHub!</h1>
+            <p class="message" style="font-size: 1.2em; color: #666;">Your one-stop shop for authentic jerseys.</p>
+            
+            <div style="margin-top: 30px;">
+                <a href="{% url 'jersey_list' %}" class="btn">Browse Jerseys</a>
+                <a href="{% url 'login' %}" class="btn">Login</a>
+                <a href="{% url 'register' %}" class="btn">Register</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
