@@ -1,6 +1,5 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from requests import post
 
 from marketplace.models import Post
 from marketplace.forms import PostForm

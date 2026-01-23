@@ -1,20 +1,33 @@
-<!DOCTYPE html>
-<html>
-<head><title>Jersey Listings</title></head>
-<body>
-    <h1>Marketplace</h1>
-    <h1>User posts</h1>
-    <div style="display: flex; flex-wrap: wrap;">
+{% extends 'base.html' %}
+
+{% block title %}My Posts - Marketplace{% endblock %}
+
+{% block content %}
+    <h1>My Posts</h1>
+    
+    <div class="product-grid">
         {% for post in posts %}
-        <div style="border: 1px solid #ccc; margin: 10px; padding: 10px; width: 200px;">
-            <h2>{{ post.title }}</h2>
-            <p>Price: ${{ post.price }}</p>
-            <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width:100px;"/>
-            <a href="{% url 'post_detail' post_id=post.id %}">View Details</a>
+        <div class="product-card">
+            {% if post.image %}
+                <img src="{{ post.image.url }}" alt="{{ post.title }}">
+            {% else %}
+                <div style="width: 100%; height: 200px; background: #eee; border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">No Image</div>
+            {% endif %}
+            
+            <h3>{{ post.title }}</h3>
+            <p class="price">${{ post.price }}</p>
+            
+            <div class="actions">
+                <a href="{% url 'post_detail' post_id=post.id %}" class="btn" style="width: 100%; box-sizing: border-box; text-align: center;">View Details</a>
+            </div>
         </div>
         {% empty %}
-        <p>No jerseys available.</p>
+        <p>You haven't posted any jerseys yet.</p>
         {% endfor %}
     </div>
-</body>
-</html>
+    
+    <div style="margin-top: 20px;">
+        <a href="{% url 'create_post' %}" class="btn btn-success">+ Create New Post</a>
+        <a href="{% url 'marketplace_home' %}" class="btn" style="background-color: #6c757d; margin-left: 10px;">Marketplace Home</a>
+    </div>
+{% endblock %}

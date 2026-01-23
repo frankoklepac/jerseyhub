@@ -1,14 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head><title>Jersey Listings</title></head>
-<body>
-    <h1>Marketplace</h1>
+{% extends 'base.html' %}
+
+{% block title %}Create Post{% endblock %}
+
+{% block content %}
     <h1>Create a New Post</h1>
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" style="max-width: 600px;">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Create Post</button>
+        <div style="margin-bottom: 15px;">
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="btn btn-success">Create Post</button>
+        <a href="{% url 'marketplace_home' %}" class="btn" style="background-color: #6c757d; margin-left: 10px;">Cancel</a>
     </form>
-    <p><a href="{% url 'marketplace_home' %}">Back to Marketplace</a></p>
-</body>
-</html>
+{% endblock %}
