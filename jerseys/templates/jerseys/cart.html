@@ -36,7 +36,10 @@
                   <td>{{ item.quantity }}</td>
                   <td>${{ item.quantity|multiply:item.price }}</td>
                   <td>
-                      <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-danger" style="padding: 5px 10px; font-size: 14px;">Remove</a>
+                      <form action="{% url 'remove_from_cart' item.id %}" method="post" style="display: inline;">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-danger" style="padding: 5px 10px; font-size: 14px;">Remove</button>
+                      </form>
                   </td>
               </tr>
               {% endfor %}
@@ -50,7 +53,7 @@
                  <a href="{% url 'jersey_list' %}" class="btn" style="background-color: #6c757d;">Continue Shopping</a>
             </div>
             <div style="text-align: right;">
-                <h2>Total: ${{ total_price|floatformat:2 }}</h2>
+                <h2>Total: ${{ total|floatformat:2 }}</h2>
                 <a href="{% url 'checkout' %}" class="btn btn-success" style="font-size: 1.2em; padding: 15px 30px;">Proceed to Checkout</a>
             </div>
         </div>
