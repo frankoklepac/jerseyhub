@@ -4,11 +4,43 @@ from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.db import transaction  
 from urllib3 import request  
-from jerseys.models import Jersey
+from jerseys.models import Jersey, Team
 
 def jersey_list(request):
-    jerseys = Jersey.objects.filter(stock__gt=0)
-    return render(request, 'jerseys/list.html', {'jerseys': jerseys})
+    jerseys = Jersey.objects.all()
+    teams = Team.objects.all()
+    
+    price_min = request.GET.get('price_min')
+    price_max = request.GET.get('price_max')
+    if price_min:
+        jerseys = jerseys.filter(price__gte=price_min)
+    if price_max:
+        jerseys = jerseys.filter(price__lte=price_max)
+    
+    team_id = request.GET.get('team')
+    if team_id:
+        jerseys = jerseys.filter(team_id=team_id)
+    
+    brand = request.GET.get('brand')
+    if brand:
+        jerseys = jerseys.filter(brand=brand)
+    
+    jersey_type = request.GET.get('type')
+    if jersey_type:
+        jerseys = jerseys.filter(type=jersey_type)
+    
+    size = request.GET.get('size')
+    if size:
+        jerseys = jerseys.filter(size=size)
+    
+    if request.GET.get('is_retro'):
+        jerseys = jerseys.filter(is_retro=True)
+    
+    context = {
+        'jerseys': jerseys,
+        'teams': teams,
+    }
+    return render(request, 'jerseys/list.html', context)
 
 def jersey_detail(request, slug):
     jersey = get_object_or_404(Jersey, slug=slug)
