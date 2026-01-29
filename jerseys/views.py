@@ -137,9 +137,19 @@ def remove_from_cart(request, item_id):
 
 @login_required
 def clear_cart(request):
+    cart = request.session.get('cart', [])
+    
+    for item in cart:
+        try:
+            jersey = get_object_or_404(Jersey, id=item['id'])
+            jersey.stock += item.get('quantity', 1)
+            jersey.save()
+        except Jersey.DoesNotExist:
+            messages.warning(request, f"Could not find jersey with ID {item['id']} to update stock.")
+
     request.session['cart'] = []
     request.session.modified = True
-    messages.info(request, 'Cart cleared!')
+    messages.info(request, 'Cart cleared and stock restored!')
     return redirect('cart')
 
 @login_required
@@ -151,21 +161,9 @@ def checkout(request):
         return redirect('cart')
     
     total = sum(item['price'] * item.get('quantity', 1) for item in cart)
-    deducted_qty_total = 0  
-    
-    for item in cart:
-        jersey = get_object_or_404(Jersey, id=item['id'])
-        qty = item.get('quantity', 1)
-        if jersey.stock >= qty:
-            jersey.stock -= qty
-            jersey.save()
-            deducted_qty_total += qty
-        else:
-            messages.error(request, f'Not enough stock for {item["name"]}!')
-            return redirect('cart')
     
     request.session['cart'] = []
     request.session.modified = True
     
-    messages.success(request, f'Order placed successfully! Total: ${total:.2f} (deducted {deducted_qty_total} items from stock).')
+    messages.success(request, f'Order placed successfully! Total: ${total:.2f}.')
     return render(request, 'jerseys/checkout.html', {'total': total})

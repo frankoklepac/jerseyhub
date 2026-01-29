@@ -4,12 +4,12 @@
 
 {% block content %}
     <h1>Create a New Post</h1>
-    <form method="post" enctype="multipart/form-data" style="max-width: 600px;">
+    <form method="post" enctype="multipart/form-data" class="create-post-form">
         {% csrf_token %}
-        <div style="margin-bottom: 15px;">
+        <div class="form-fields-container">
             {{ form.as_p }}
         </div>
         <button type="submit" class="btn btn-success">Create Post</button>
-        <a href="{% url 'marketplace_home' %}" class="btn" style="background-color: #6c757d; margin-left: 10px;">Cancel</a>
+        <a href="{% url 'marketplace_home' %}" class="btn btn-cancel">Cancel</a>
     </form>
 {% endblock %}

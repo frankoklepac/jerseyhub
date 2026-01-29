@@ -1,0 +1,31 @@
+.login-container, .register-container {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.form-header {
+    text-align: center;
+}
+
+.form-full-width-btn {
+    width: 100%;
+}
+
+.form-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.home-container {
+    text-align: center;
+    padding: 50px 0;
+}
+
+.home-message {
+    font-size: 1.2em;
+    color: #666;
+}
+
+.home-actions {
+    margin-top: 30px;
+}

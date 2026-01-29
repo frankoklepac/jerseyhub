@@ -90,6 +90,91 @@
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h1>Available Jerseys</h1>
+        <button id="toggle-filters-btn" class="btn">Show Filters</button>
+    </div>
+
+    <div class="filter-section" id="filter-section" style="display: none;">
+        <h3>Filters</h3>
+        <form method="get">
+            <div class="filter-form-container">
+                <div>
+                    <label>Price Range:</label>
+                    <div class="price-range-inputs">
+                        <input type="number" name="price_min" placeholder="Min" value="{{ request.GET.price_min }}" step="0.5" min="0">
+                        <input type="number" name="price_max" placeholder="Max" value="{{ request.GET.price_max }}" step="0.5" min="0">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="team">Team:</label>
+                    <select name="team">
+                        <option value="">All Teams</option>
+                        {% for team in teams %}
+                        <option value="{{ team.id }}" {% if request.GET.team|stringformat:"s" == team.id|stringformat:"s" %}selected{% endif %}>{{ team.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label for="brand">Brand:</label>
+                    <select name="brand">
+                        <option value="">All Brands</option>
+                        <option value="Nike" {% if request.GET.brand == 'Nike' %}selected{% endif %}>Nike</option>
+                        <option value="Adidas" {% if request.GET.brand == 'Adidas' %}selected{% endif %}>Adidas</option>
+                        <option value="Puma" {% if request.GET.brand == 'Puma' %}selected{% endif %}>Puma</option>
+                        <option value="Under Armour" {% if request.GET.brand == 'Under Armour' %}selected{% endif %}>Under Armour</option>
+                        <option value="New Balance" {% if request.GET.brand == 'New Balance' %}selected{% endif %}>New Balance</option>
+                        <option value="Other" {% if request.GET.brand == 'Other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="type">Type:</label>
+                    <select name="type">
+                        <option value="">All Types</option>
+                        <option value="Home" {% if request.GET.type == 'Home' %}selected{% endif %}>Home</option>
+                        <option value="Away" {% if request.GET.type == 'Away' %}selected{% endif %}>Away</option>
+                        <option value="Third" {% if request.GET.type == 'Third' %}selected{% endif %}>Third</option>
+                        <option value="Goalkeeper" {% if request.GET.type == 'Goalkeeper' %}selected{% endif %}>Goalkeeper</option>
+                        <option value="Training" {% if request.GET.type == 'Training' %}selected{% endif %}>Training</option>
+                        <option value="Other" {% if request.GET.type == 'Other' %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="size">Size:</label>
+                    <select name="size">
+                        <option value="">All Sizes</option>
+                        <option value="S" {% if request.GET.size == 'S' %}selected{% endif %}>Small</option>
+                        <option value="M" {% if request.GET.size == 'M' %}selected{% endif %}>Medium</option>
+                        <option value="L" {% if request.GET.size == 'L' %}selected{% endif %}>Large</option>
+                        <option value="XL" {% if request.GET.size == 'XL' %}selected{% endif %}>Extra Large</option>
+                    </select>
+                </div>
+
+            <div class="filter-checkbox-group">
+                    <label>
+                        <input type="checkbox" name="is_retro" value="on" {% if request.GET.is_retro %}checked{% endif %}>
+                        Retro Only
+                    </label>
+                </div>
+            </div>
+
+            <div class="filter-buttons">
+                <button type="submit" class="btn">Apply Filters</button>
+                <button type="button" class="btn" onclick="window.location='{% url 'jersey_list' %}'">Clear Filters</button>
+            </div>
+            <script>
+                const priceMin = document.querySelector('input[name="price_min"]');
+                const priceMax = document.querySelector('input[name="price_max"]');
+                
+                priceMax.addEventListener('change', function() {
+                    if (parseFloat(this.value) < parseFloat(priceMin.value)) {
+                        this.value = priceMin.value;
+                    }
+                });
+            </script>
+        </form>
     </div>
 
     <div class="product-grid">
@@ -98,16 +183,29 @@
             {% if jersey.image %}
                 <img src="{{ jersey.image.url }}" alt="{{ jersey }}">
             {% else %}
-                <div style="width: 100%; height: 200px; background: #eee; border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">No Image</div>
+                <div class="no-image-placeholder">No Image</div>
             {% endif %}
             <h3><a href="{{ jersey.get_absolute_url }}">{{ jersey }}</a></h3>
             <p class="price">${{ jersey.price }}</p>
             <p class="actions">
-                 <a href="{{ jersey.get_absolute_url }}" class="btn" style="width: 100%; box-sizing: border-box; text-align: center;">View Details</a>
+                 <a href="{{ jersey.get_absolute_url }}" class="btn btn-view-details">View Details</a>
             </p>
         </div>
         {% empty %}
         <p>No jerseys available.</p>
         {% endfor %}
     </div>
+
+    <script>
+        document.getElementById('toggle-filters-btn').addEventListener('click', function() {
+            var filterSection = document.getElementById('filter-section');
+            if (filterSection.style.display === 'none' || filterSection.style.display === '') {
+                filterSection.style.display = 'block';
+                this.textContent = 'Hide Filters';
+            } else {
+                filterSection.style.display = 'none';
+                this.textContent = 'Show Filters';
+            }
+        });
+    </script>
 {% endblock %}

@@ -3,11 +3,11 @@
 {% block title %}Checkout Success{% endblock %}
 
 {% block content %}
-    <div style="text-align: center; padding: 50px;">
-        <h1 style="color: #2ecc71;">Order Placed Successfully!</h1>
-        <p style="font-size: 1.2em;">Thank you for your purchase. Your order has been confirmed.</p>
-        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; display: inline-block; margin: 20px 0; border: 1px solid #ddd;">
-            <p style="margin: 0; font-size: 1.5em; font-weight: bold;">Total Paid: ${{ total|floatformat:2 }}</p>
+    <div class="checkout-success-container">
+        <h1 class="checkout-success-title">Order Placed Successfully!</h1>
+        <p class="checkout-success-message">Thank you for your purchase. Your order has been confirmed.</p>
+        <div class="total-paid-box">
+            <p class="total-paid-amount">Total Paid: ${{ total|floatformat:2 }}</p>
         </div>
         <br>
         <a href="{% url 'jersey_list' %}" class="btn">Continue Shopping</a>

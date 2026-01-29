@@ -3,13 +3,13 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-    <h2 style="text-align: center;">Login</h2>
-    <form method="post" style="max-width: 400px; margin: 0 auto;">
+    <h2 class="form-header">Login</h2>
+    <form method="post" class="login-container">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn" style="width: 100%;">Login</button>
+        <button type="submit" class="btn form-full-width-btn">Login</button>
     </form>
-    <p style="text-align: center; margin-top: 20px;">
+    <p class="form-link">
         <a href="{% url 'register' %}">No account? Register</a>
     </p>
 {% endblock %}

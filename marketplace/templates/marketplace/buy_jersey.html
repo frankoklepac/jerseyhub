@@ -2,37 +2,32 @@
 {% block title %}Buy {{ post.title }} - Marketplace{% endblock %}
 
 {% block content %}
-<div>
-    <div>
-        <div>
-            <h2>{{ post.title }}</h2>
-            <p><strong>Price:</strong> ${{ post.price }}</p>
-            <p><strong>Seller:</strong> {{ post.owner.username }}</p>
-        </div>
-        <div>
-            <h3>Payment Information</h3>
-            <form action="{% url 'confirm_purchase' post.id %}" method="post">
-                {% csrf_token %}
-                <div>
-                    <label for="card_number">Card Number</label>
-                    <input type="text" id="card_number" name="card_number" required placeholder="XXXX XXXX XXXX XXXX">
+<div class="buy-jersey-container">
+    <div class="post-details">
+        <h2>{{ post.title }}</h2>
+        <p><strong>Price:</strong> ${{ post.price }}</p>
+        <p><strong>Seller:</strong> {{ post.owner.username }}</p>
+    </div>
+    <div class="payment-form">
+        <h3>Payment Information</h3>
+        <form action="{% url 'confirm_purchase' post.id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="card_number">Card Number</label>
+                <input type="text" id="card_number" name="card_number" required placeholder="XXXX XXXX XXXX XXXX">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="expiry_date">Expiry Date</label>
+                    <input type="text" id="expiry_date" name="expiry_date" required placeholder="MM/YY">
                 </div>
-                <div>
-                    <div>
-                        <label for="expiry_date">Expiry Date</label>
-                        <input type="text" id="expiry_date" name="expiry_date" required placeholder="MM/YY">
-                    </div>
-                    <div>
-                        <label for="cvv">CVV</label>
-                        <input type="text" id="cvv" name="cvv" required placeholder="123">
-                    </div>
+                <div class="form-group">
+                    <label for="cvv">CVV</label>
+                    <input type="text" id="cvv" name="cvv" required placeholder="123">
                 </div>
-                <button type="submit">Confirm Purchase</button>
-                {% if error %}
-                    <p class="alert error">{{ error }}</p>
-                {% endif %}
-            </form>
-        </div>
+            </div>
+            <button type="submit" class="btn">Confirm Purchase</button>
+        </form>
     </div>
 </div>
 {% endblock %}
