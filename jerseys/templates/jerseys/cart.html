@@ -7,14 +7,14 @@
     <h1>Shopping Cart</h1>
 
     {% if cart %}
-        <div style="overflow-x: auto;">
-        <table>
+        <div class="cart-table-container">
+        <table class="cart-table">
             <thead>
                 <tr>
-                    <th style="width: 100px;">Image</th>
+                    <th class="image-col">Image</th>
                     <th>Item</th>
                     <th>Price</th>
-                    <th style="width: 100px;">Quantity</th>
+                    <th class="quantity-col">Quantity</th>
                     <th>Total</th>
                     <th>Actions</th>
                 </tr>
@@ -24,9 +24,9 @@
               <tr>
                   <td>
                       {% if item.image %}
-                          <img src="{{ item.image }}" alt="{{ item.name }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px;">
+                          <img src="{{ item.image }}" alt="{{ item.name }}" class="cart-item-image">
                       {% else %}
-                          <div style="width: 80px; height: 80px; background: #eee; display: flex; align-items: center; justify-content: center;">-</div>
+                          <div class="cart-item-no-image">-</div>
                       {% endif %}
                   </td>
                   <td>
@@ -36,9 +36,9 @@
                   <td>{{ item.quantity }}</td>
                   <td>${{ item.quantity|multiply:item.price }}</td>
                   <td>
-                      <form action="{% url 'remove_from_cart' item.id %}" method="post" style="display: inline;">
+                      <form action="{% url 'remove_from_cart' item.id %}" method="post" class="remove-from-cart-form">
                           {% csrf_token %}
-                          <button type="submit" class="btn btn-danger" style="padding: 5px 10px; font-size: 14px;">Remove</button>
+                          <button type="submit" class="btn btn-danger btn-remove-small">Remove</button>
                       </form>
                   </td>
               </tr>
@@ -47,18 +47,18 @@
         </table>
         </div>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px;">
-            <div>
+        <div class="cart-summary">
+            <div class="cart-actions">
                  <a href="{% url 'clear_cart' %}" class="btn btn-danger">Clear Cart</a>
-                 <a href="{% url 'jersey_list' %}" class="btn" style="background-color: #6c757d;">Continue Shopping</a>
+                 <a href="{% url 'jersey_list' %}" class="btn btn-cancel">Continue Shopping</a>
             </div>
-            <div style="text-align: right;">
-                <h2>Total: ${{ total|floatformat:2 }}</h2>
-                <a href="{% url 'checkout' %}" class="btn btn-success" style="font-size: 1.2em; padding: 15px 30px;">Proceed to Checkout</a>
+            <div class="cart-total">
+                <h2 class="cart-total-price">Total: ${{ total|floatformat:2 }}</h2>
+                <a href="{% url 'checkout' %}" class="btn btn-success btn-buy-jersey">Proceed to Checkout</a>
             </div>
         </div>
     {% else %}
-        <div style="text-align: center; padding: 50px;">
+        <div class="empty-cart-message">
             <p>Your cart is empty.</p>
             <a href="{% url 'jersey_list' %}" class="btn">Browse Jerseys</a>
         </div>

@@ -3,14 +3,18 @@
 {% block title %}Jersey Listings{% endblock %}
 
 {% block content %}
+    <div class="jersey-list-header">
+        <h1>Available Jerseys</h1>
+        <button id="toggle-filters-btn" class="btn">Show Filters</button>
+    </div>
 
-       <div class="filter-section">
+    <div class="filter-section" id="filter-section" style="display: none;">
         <h3>Filters</h3>
         <form method="get">
-            <div style="display: flex; flex-direction: row; gap: 15px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 15px;">
+            <div class="filter-form-container">
                 <div>
                     <label>Price Range:</label>
-                    <div style="display: flex; gap: 5px; width: 250px;">
+                    <div class="price-range-inputs">
                         <input type="number" name="price_min" placeholder="Min" value="{{ request.GET.price_min }}" step="0.5" min="0">
                         <input type="number" name="price_max" placeholder="Max" value="{{ request.GET.price_max }}" step="0.5" min="0">
                     </div>
@@ -63,7 +67,7 @@
                     </select>
                 </div>
 
-            <div style="display: flex; flex-direction: row; gap: 15px; flex-wrap: wrap; align-items: center; margin-bottom: 15px;">
+            <div class="filter-checkbox-group">
                     <label>
                         <input type="checkbox" name="is_retro" value="on" {% if request.GET.is_retro %}checked{% endif %}>
                         Retro Only
@@ -71,7 +75,7 @@
                 </div>
             </div>
 
-            <div style="display: flex; gap: 15px;">
+            <div class="filter-buttons">
                 <button type="submit" class="btn">Apply Filters</button>
                 <button type="button" class="btn" onclick="window.location='{% url 'jersey_list' %}'">Clear Filters</button>
             </div>
@@ -88,26 +92,35 @@
         </form>
     </div>
 
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h1>Available Jerseys</h1>
-    </div>
-
     <div class="product-grid">
         {% for jersey in jerseys %}
         <div class="product-card">
             {% if jersey.image %}
                 <img src="{{ jersey.image.url }}" alt="{{ jersey }}">
             {% else %}
-                <div style="width: 100%; height: 200px; background: #eee; border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">No Image</div>
+                <div class="no-image-placeholder">No Image</div>
             {% endif %}
             <h3><a href="{{ jersey.get_absolute_url }}">{{ jersey }}</a></h3>
             <p class="price">${{ jersey.price }}</p>
             <p class="actions">
-                 <a href="{{ jersey.get_absolute_url }}" class="btn" style="width: 100%; box-sizing: border-box; text-align: center;">View Details</a>
+                 <a href="{{ jersey.get_absolute_url }}" class="btn btn-view-details">View Details</a>
             </p>
         </div>
         {% empty %}
         <p>No jerseys available.</p>
         {% endfor %}
     </div>
+
+    <script>
+        document.getElementById('toggle-filters-btn').addEventListener('click', function() {
+            var filterSection = document.getElementById('filter-section');
+            if (filterSection.style.display === 'none' || filterSection.style.display === '') {
+                filterSection.style.display = 'block';
+                this.textContent = 'Hide Filters';
+            } else {
+                filterSection.style.display = 'none';
+                this.textContent = 'Show Filters';
+            }
+        });
+    </script>
 {% endblock %}

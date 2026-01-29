@@ -3,20 +3,20 @@
 {% block title %}JerseyHub Home{% endblock %}
 
 {% block content %}
-    <div style="text-align: center; padding: 50px 0;">
+    <div class="home-container">
         {% if user.is_authenticated %}
             <h1>Welcome back, {{ user.username }}!</h1>
             <p class="message">You're logged in. Manage your account or shop now.</p>
             
-            <div style="margin-top: 30px;">
+            <div class="home-actions">
                 <a href="{% url 'jersey_list' %}" class="btn">Browse Shop</a>
                 <a href="{% url 'marketplace_home' %}" class="btn">Go to Marketplace</a>
             </div>
         {% else %}
             <h1>Welcome to JerseyHub!</h1>
-            <p class="message" style="font-size: 1.2em; color: #666;">Your one-stop shop for authentic jerseys.</p>
+            <p class="message home-message">Your one-stop shop for authentic jerseys.</p>
             
-            <div style="margin-top: 30px;">
+            <div class="home-actions">
                 <a href="{% url 'jersey_list' %}" class="btn">Browse Jerseys</a>
                 <a href="{% url 'login' %}" class="btn">Login</a>
                 <a href="{% url 'register' %}" class="btn">Register</a>

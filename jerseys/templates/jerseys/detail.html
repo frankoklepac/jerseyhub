@@ -3,30 +3,30 @@
 {% block title %}{{ jersey }}{% endblock %}
 
 {% block content %}
-    <div style="display: flex; gap: 40px; flex-wrap: wrap;">
-        <div style="flex: 1; min-width: 300px;">
+    <div class="jersey-detail-container">
+        <div class="jersey-detail-image-container">
             {% if jersey.image %}
-                <img src="{{ jersey.image.url }}" alt="{{ jersey }}" style="width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                <img src="{{ jersey.image.url }}" alt="{{ jersey }}" class="jersey-detail-image">
             {% else %}
-                <div style="width: 100%; height: 400px; background: #eee; border-radius: 8px; display: flex; align-items: center; justify-content: center;">No Image</div>
+                <div class="no-image-detail-placeholder">No Image</div>
             {% endif %}
         </div>
-        <div style="flex: 1; min-width: 300px;">
-            <h1 style="margin-top: 0;">{{ jersey }}</h1>
-            <p style="font-size: 1.5em; color: #27ae60; font-weight: bold;">${{ jersey.price }}</p>
+        <div class="jersey-detail-info">
+            <h1 class="jersey-detail-title">{{ jersey }}</h1>
+            <p class="jersey-detail-price">${{ jersey.price }}</p>
             <p><strong>Stock:</strong> {{ jersey.stock }} available</p>
-            <div style="margin: 20px 0; padding: 20px; background: #f9f9f9; border-radius: 8px;">
+            <div class="jersey-description-box">
                 <h3>Description</h3>
                 <p>{{ jersey.description|default:"No description provided."|linebreaks }}</p>
             </div>
             
             {% if user.is_authenticated %}
                 {% if jersey.stock > 0 %}
-                <form method="post" action="{% url 'add_to_cart' jersey.slug %}" style="margin-top: 20px;">
+                <form method="post" action="{% url 'add_to_cart' jersey.slug %}" class="add-to-cart-form">
                     {% csrf_token %}
                     <label for="quantity">Quantity:</label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="number" id="quantity" name="quantity" min="1" max="{{ jersey.stock }}" value="1" required style="width: 100px; margin-bottom: 0;">
+                    <div class="quantity-input-group">
+                        <input type="number" id="quantity" name="quantity" min="1" max="{{ jersey.stock }}" value="1" required class="quantity-input">
                         <button type="submit" class="btn">Add to Cart</button>
                     </div>
                 </form>
@@ -37,7 +37,7 @@
                 <p class="alert info"><a href="{% url 'login' %}?next={{ request.path }}">Login</a> to purchase this item.</p>
             {% endif %}
             
-            <p style="margin-top: 20px;"><a href="{% url 'jersey_list' %}">&larr; Back to List</a></p>
+            <p class="back-to-list-link"><a href="{% url 'jersey_list' %}">&larr; Back to List</a></p>
         </div>
     </div>
 {% endblock %}
